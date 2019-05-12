@@ -13,7 +13,8 @@ class App extends Component {
             numberOfPages: 1,
             wishList: [],
             brands: [],
-            priceOrder: null
+            priceOrder: null,
+            selectedBrandId: null
         }
     }
 
@@ -71,14 +72,19 @@ class App extends Component {
             )
     }
 
-    callGetProductsRequest(pageNumber, priceOrder) {
+    callGetProductsRequest(pageNumber, priceOrder, brandId) {
         let baseUrl = `http://localhost:9000/api/products?pageNumber=${pageNumber != null ? pageNumber : 1}`;
         if(priceOrder) {
             baseUrl = baseUrl + "&priceOrder=" + priceOrder;
         } else {
             baseUrl = baseUrl + `&priceOrder=${this.state.priceOrder != null ? this.state.priceOrder : "asc"}`;
         }
-        //TODO NELSON add the other parameters
+
+        if(brandId && brandId !== -1) {
+            baseUrl = baseUrl + "&brandId=" + brandId;
+        } else if(this.state.selectedBrandId){
+            baseUrl = baseUrl + "&brandId=" + this.state.selectedBrandId;
+        }
         fetch(baseUrl)
             .then(res => res.json())
             .then(jsonResponse =>
@@ -106,7 +112,6 @@ class App extends Component {
         console.log(pageNumber);
         if(pageNumber) {
             this.callGetProductsRequest(pageNumber);
-            //TODO NELSON do a get request here with the pageNumber, and the other filters in the future
         }
     };
 
@@ -119,6 +124,31 @@ class App extends Component {
             this.callGetProductsRequest(1, event.target.value);
         }
     };
+
+    handleBrandSortChange = (event) => {
+        if(event && event.target && event.target.value)
+        {
+            let brandId =  parseInt(event.target.value) === -1 ? null : parseInt(event.target.value);
+            this.setState({
+                selectedBrandId: brandId
+            }, () => this.callGetProductsRequest(1, null, brandId));
+        }
+    };
+
+    renderBrandOptions() {
+        let defaultArray = [<option key={-1} value={-1}>All</option>];
+        let brandsArrays = this.state.brands.map((brand, index) => {
+            return <option key={brand.id} value={brand.id}>{brand.name}</option>
+        });
+        return (
+            <div>
+                <label className="product-controls__label" htmlFor="Brands-Filter">Brands</label>
+                <select onChange={this.handleBrandSortChange} className="product-controls__select" id="Brands-Filter">
+                    {defaultArray.concat(brandsArrays)}
+                </select>
+            </div>
+        );
+    }
 
     renderPagination() {
         let liArray = [];
@@ -266,13 +296,7 @@ class App extends Component {
                 <main className="product-page">
                     <div className="container">
                         <div className="product-controls">
-                            <label className="product-controls__label" htmlFor="Brands-Filter">Brands</label>
-                            <select className="product-controls__select" id="Brands-Filter">
-                                <option value>All</option>
-                                <option value={1}>MCQ ALEXANDER MCQUEEN</option>
-                                <option value={2}>OFF-WHITE</option>
-                                <option>...</option>
-                            </select>
+                            {this.renderBrandOptions()}
                             <label className="product-controls__label" htmlFor="Sort">Sort</label>
                             <select onChange={this.handlePriceSortChange} className="product-controls__select" id="Sort">
                                 <option value={"asc"}>Price ascending</option>
@@ -293,6 +317,7 @@ class App extends Component {
                 <p> Debug brands: {this.state.brands.length}</p>
                 <p> Debug numberOfPages: {this.state.numberOfPages}</p>
                 <p> Debug priceOrder: {this.state.priceOrder}</p>
+                <p> Debug selectedBrandId: {this.state.selectedBrandId}</p>
             </div>
         );
     }
