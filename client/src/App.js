@@ -18,6 +18,27 @@ class App extends Component {
         }
     }
 
+    callPostWishListRequest(productId) {
+        if(productId) {
+            fetch("http://localhost:9000/api/wishList", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId
+                })
+            })
+            .then(res => res.json())
+            .then(jsonResponse =>
+                this.setState({
+                    wishList: jsonResponse.data.wishList
+                })
+            )
+        }
+    }
+
     callPostBagRequest(productId) {
         if(productId) {
             fetch("http://localhost:9000/api/bag", {
@@ -102,6 +123,10 @@ class App extends Component {
         this.callGetBrandsRequest();
         this.callGetProductsRequest();
     }
+
+    handleAddProductToWishList = (productId) => {
+        this.callPostWishListRequest(productId);
+    };
 
     handleAddToCartButtonClick = (productId) => {
         this.callPostBagRequest(productId);
@@ -230,7 +255,8 @@ class App extends Component {
                             <img className="product__image" src={product.image} alt="Product"
                                  itemProp="image"/>
                             <button
-                                className="product__wishlist-button button button--round button--wishlist">
+                                onClick={() => this.handleAddProductToWishList(product.id)}
+                                className={`product__wishlist-button button button--round button--wishlist ${this.state.wishList.filter((wishProduct, index) => { return wishProduct.id === product.id }).length === 0 ? '' : 'button-in-wishlist'}`}>
                                 <svg className="icon" width="20px" height="20px" viewBox="0 6 20 20"
                                      version="1.1" xmlns="http://www.w3.org/2000/svg"
                                      xmlnsXlink="http://www.w3.org/1999/xlink">
