@@ -203,7 +203,7 @@ class App extends Component {
                             <div className="product__price" itemScope itemType="http://schema.org/Offer">
                                 {product.priceDiscounted ?
                                     <span className="product__price--strike">£{product.price}</span> :
-                                    <span className="product__price" itemProp="price">£210</span>}
+                                    <span className="product__price" itemProp="price">£{product.price}</span>}
                                 {product.priceDiscounted ? <span className="product__price--discounted"
                                                                  itemProp="price">£{product.priceDiscounted}</span> : null}
                             </div>
