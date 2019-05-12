@@ -879,11 +879,11 @@ router.get("/wishList", function (req, res, next) {
 router.post("/wishList", function (req, res, next) {
     let productId = req.body.productId;
     const checkProductIdIsValid = function (element) {
-        return parseInt(element.id) ===  productId;
+        return parseInt(element.id) ===  parseInt(productId);
     };
 
     const checkIfProductIsInTheWishList = function (element) {
-        return parseInt(element.id) ===  productId;
+        return parseInt(element.id) ===  parseInt(productId);
     };
 
     let productIndex = initialProducts.findIndex(checkProductIdIsValid);
@@ -910,11 +910,11 @@ router.post("/wishList", function (req, res, next) {
 router.post("/bag", function (req, res, next) {
     let productId = req.body.productId;
     const checkProductIdIsValid = function (element) {
-        return parseInt(element.id) ===  productId;
+        return parseInt(element.id) ===  parseInt(productId);
     };
 
     const checkIfProductIsInTheBag = function (element) {
-        return parseInt(element.id) ===  productId;
+        return parseInt(element.id) ===  parseInt(productId);
     };
 
 

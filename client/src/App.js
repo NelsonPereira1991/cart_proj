@@ -16,6 +16,29 @@ class App extends Component {
         }
     }
 
+    callPostBagRequest(productId) {
+        if(productId) {
+            fetch("http://localhost:9000/api/bag", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId
+                })
+            })
+                .then(res => res.json())
+                .then(jsonResponse =>
+                    this.setState({
+                        bag: jsonResponse.data.bag,
+                        sumPrices: jsonResponse.data.sumPrices
+                    })
+                )
+        }
+    }
+
+
     callGetBagRequest() {
         fetch("http://localhost:9000/api/bag")
             .then(res => res.json())
@@ -70,6 +93,10 @@ class App extends Component {
         this.callGetBrandsRequest();
         this.callGetProductsRequest();
     }
+
+    handleAddToCartButtonClick = (productId) => {
+        this.callPostBagRequest(productId);
+    };
 
     handlePageClick = (pageNumber) => {
         console.log("pageNumber is:");
@@ -144,7 +171,7 @@ class App extends Component {
             );
         } else {
             return (
-                <button className="product__add-to-cart button button--primary">
+                <button onClick={() => this.handleAddToCartButtonClick(product.id)} className="product__add-to-cart button button--primary">
                     Add to Cart
                 </button>
             );
