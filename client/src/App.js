@@ -338,12 +338,12 @@ class App extends Component {
                 <footer className="container">
                     <p className="footer__sidenote">Footer</p>
                 </footer>
-                <p> Debug products: {this.state.products.length}</p>
-                <p> Debug currentPage: {this.state.currentPage}</p>
-                <p> Debug brands: {this.state.brands.length}</p>
-                <p> Debug numberOfPages: {this.state.numberOfPages}</p>
-                <p> Debug priceOrder: {this.state.priceOrder}</p>
-                <p> Debug selectedBrandId: {this.state.selectedBrandId}</p>
+                {/*<p> Debug products: {this.state.products.length}</p>*/}
+                {/*<p> Debug currentPage: {this.state.currentPage}</p>*/}
+                {/*<p> Debug brands: {this.state.brands.length}</p>*/}
+                {/*<p> Debug numberOfPages: {this.state.numberOfPages}</p>*/}
+                {/*<p> Debug priceOrder: {this.state.priceOrder}</p>*/}
+                {/*<p> Debug selectedBrandId: {this.state.selectedBrandId}</p>*/}
             </div>
         );
     }
