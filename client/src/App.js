@@ -12,7 +12,8 @@ class App extends Component {
             currentPage: 1,
             numberOfPages: 1,
             wishList: [],
-            brands: []
+            brands: [],
+            priceOrder: null
         }
     }
 
@@ -70,10 +71,12 @@ class App extends Component {
             )
     }
 
-    callGetProductsRequest(pageNumber) {
-        let baseUrl = "http://localhost:9000/api/products";
-        if(pageNumber) {
-            baseUrl = baseUrl + "?pageNumber=" + pageNumber;
+    callGetProductsRequest(pageNumber, priceOrder) {
+        let baseUrl = `http://localhost:9000/api/products?pageNumber=${pageNumber != null ? pageNumber : 1}`;
+        if(priceOrder) {
+            baseUrl = baseUrl + "&priceOrder=" + priceOrder;
+        } else {
+            baseUrl = baseUrl + `&priceOrder=${this.state.priceOrder != null ? this.state.priceOrder : "asc"}`;
         }
         //TODO NELSON add the other parameters
         fetch(baseUrl)
@@ -104,6 +107,16 @@ class App extends Component {
         if(pageNumber) {
             this.callGetProductsRequest(pageNumber);
             //TODO NELSON do a get request here with the pageNumber, and the other filters in the future
+        }
+    };
+
+    handlePriceSortChange = (event) => {
+        if(event && event.target && event.target.value)
+        {
+            this.setState({
+                priceOrder: event.target.value
+            });
+            this.callGetProductsRequest(1, event.target.value);
         }
     };
 
@@ -261,9 +274,9 @@ class App extends Component {
                                 <option>...</option>
                             </select>
                             <label className="product-controls__label" htmlFor="Sort">Sort</label>
-                            <select className="product-controls__select" id="Sort">
-                                <option value={1}>Price ascending</option>
-                                <option value={2}>Price descending</option>
+                            <select onChange={this.handlePriceSortChange} className="product-controls__select" id="Sort">
+                                <option value={"asc"}>Price ascending</option>
+                                <option value={"desc"}>Price descending</option>
                             </select>
                         </div>
                         <ul className="product-list">
@@ -279,6 +292,7 @@ class App extends Component {
                 <p> Debug currentPage: {this.state.currentPage}</p>
                 <p> Debug brands: {this.state.brands.length}</p>
                 <p> Debug numberOfPages: {this.state.numberOfPages}</p>
+                <p> Debug priceOrder: {this.state.priceOrder}</p>
             </div>
         );
     }
